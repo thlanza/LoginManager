@@ -11,11 +11,11 @@ module.exports = (app) => {
         res.json(list);
     });
 
-    app.get('/Service:id', (req, res) => {
+    app.get('/Service/:id', validator.get, (req, res) => {
         var service = new service_manager();
 
         try {
-            var obj = service.getService(req.id);
+            var obj = service.getService(req.params.id);
         }
         catch (e) {
             res.status(404).send(e);
@@ -24,7 +24,7 @@ module.exports = (app) => {
         res.json(obj);
     });
 
-    app.post('/Service', validator, (req, res) => {
+    app.post('/Service', validator.post, (req, res) => {
         var service = new service_manager();
 
         try {
@@ -37,7 +37,7 @@ module.exports = (app) => {
         res.status(201).send('Ok');
     });
 
-    app.delete('/Service', (req, res) => {
+    app.delete('/Service', validator.delete, (req, res) => {
         var service = new service_manager();
 
         try {
@@ -50,7 +50,7 @@ module.exports = (app) => {
         res.send('Ok');
     });
 
-    app.put('/Service', (req, res) => {
+    app.put('/Service', validator.put, (req, res) => {
         var service = new service_manager();
 
         try {

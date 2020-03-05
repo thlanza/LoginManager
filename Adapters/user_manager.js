@@ -1,9 +1,9 @@
-var db_manager = require('../Adapters/data-base_manager');
+var user_db_manager = require('../DataBaseAdapters/user_db_manager');
 
 class UserManager{
     
     constructor(){
-        this.db = new db_manager();
+        this.db = new user_db_manager();
     }
 
     listUser(){

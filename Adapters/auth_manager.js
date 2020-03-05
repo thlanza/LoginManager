@@ -1,17 +1,21 @@
-var db_manager = require('../Adapters/data-base_manager');
+const jwt = require('jsonwebtoken');
 
-class AuthManager{
+class AuthManager {
 
-    constructor(){
-        this.db = new db_manager();
-    }
-
-    generateHash(userId){
+    constructor() {
 
     }
 
-    validateToken(token){
+    Authenticate(cookie) {
+        return true;
+    }
 
+    Authorization(cookie, path, method) {
+        return true;
+    }
+
+    gerarJWT(){
+        
     }
 }
 

@@ -1,3 +1,5 @@
+var validate = require('../Validators/user_validator');
+
 module.exports = (app) => {
 
     app.get('/api/user', (req, res) => {
