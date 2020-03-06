@@ -1,9 +1,9 @@
-var db_manager = require('../Adapters/data-base_manager');
+var profile_db_manager = require('../DataBaseAdapters/profile_db_manager');
 
 class ProfileManager{
     
     constructor(){
-        this.db = new db_manager();
+        this.profile_db = new profile_db_manager();
     }
 
     listProfile(){
