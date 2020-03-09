@@ -1,17 +1,32 @@
-class ServiceDataBaseManager{
+const mongo = require('../Db/mongo');
 
-    constructor(){
-        //Conecta no tabela/collection Service
+class ServiceDataBaseManager {
+
+    constructor() {
+        this._conexaoDb = mongo;
     }
 
-    listServices() {
-
-        //return list of object 'Serivce'
-        return 'Ok';
+    async listServices() {
+        const json = [];
+        await this._conexaoDb(
+            async (banco) => {
+                const db = banco.db('SPGF');
+                const collection = db.collection('Service');
+                await collection.find().forEach(a => json.push(a));
+            });
+        return json;
     }
 
-    getServiceById(id) {
-        //return object 'Service'
+    async getServiceById(string) {
+        const id = this._id(string)
+        const json = [];
+        await this._conexaoDb(
+            async (banco) => {
+                const db = banco.db('SPGF');
+                const collection = db.collection('Service');
+                await collection.find({ "_id": id }).forEach(a => json.push(a));
+            });
+        return json;
     }
 
     searchServiceByName(name) {
@@ -26,12 +41,20 @@ class ServiceDataBaseManager{
         //return boolean
     }
 
-    getServiceIdBySecret(secret){
+    getServiceIdBySecret(secret) {
         //return 'Id' from object 'Service'
     }
 
-    addService(name, domain) {
-
+    async addService(name, domain) {
+        const body = { name, domain };
+        await this._conexaoDb(
+            async (banco) => {
+                const db = banco.db('SPGF');
+                const collection = db.collection('Service');
+                await collection.insertOne(body);
+            });
+        const msg = "Serviço incluido com sucesso";
+        return msg;
     }
 
     removeService(id) {

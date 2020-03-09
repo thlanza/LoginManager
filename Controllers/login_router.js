@@ -4,6 +4,7 @@
 const validator = require('../Validators/login_validator');
 const Login_manager = require('../Adapters/login_manager');
 const bcrypt = require("bcryptjs");
+const _user_db_manager = require("../DataBaseAdapters/user_db_manager")
 
 module.exports = (app) => {
     // ================  NGINX WILL HANDLE THIS ===============
@@ -68,14 +69,14 @@ module.exports = (app) => {
           `);
     });
 
-    app.get("/add", (req, resp) => {
+    app.get("/adduser", (req, resp) => {
 
         resp.send(`
             <html>
                 <body>
                 <center><br><br><br>
                 <h1> Auth AddUser teste </h1>
-                <form class="form" action="/add" method="post">
+                <form class="form" action="/adduser" method="post">
                     <div class="formulario">
                     <label for="email">Email</label>
                     <input id="email" type="email" name="email" placeholder="insira o login" />
@@ -92,7 +93,7 @@ module.exports = (app) => {
         `);
     });
 
-    app.get("/list", async (req, resp) => {
+    app.get("/listuser", async (req, resp) => {
         const loginManager = new Login_manager();
         const msg = await loginManager.listUsers();
         return resp.send(msg);
@@ -101,22 +102,26 @@ module.exports = (app) => {
     app.post('/login', validator.postAPI, async (req, res) => {
 
         const hash = await bcrypt.hash(req.body.senha, 10);
-
         const loginManager = new Login_manager();
         const msg = await loginManager.validarLogin(req.body.email, hash);
         return res.send(msg)
 
     });
 
-    app.post('/add', validator.post, async (req, res) => {
+    app.post('/adduser', validator.post, async (req, res) => {
 
         const hash = await bcrypt.hash(req.body.senha, 10);
-
         const loginManager = new Login_manager();
         const msg = await loginManager.addUser(req.body.email, hash);
         return res.send(msg);
 
     });
 
+
+    app.get("/listid", async (req, resp) => {
+        const userdb = new _user_db_manager();
+        const msg = await userdb.getUserById();
+        return resp.send(msg);
+    });
 
 }
