@@ -1,15 +1,24 @@
-class ProfileDataBaseManager{
-    
-    constructor(){
-        //Conecta no tabela/collection Profile
+const mongo = require('../Db/mongo');
+
+class ProfileDataBaseManager {
+
+    constructor() {
+        this._conexaoDb = mongo;
     }
 
     searchProfile() {
         //return boolean
     }
 
-    addProfile() {
-
+    addProfile(body) {
+        await this._conexaoDb(
+            async (banco) => {
+                const db = banco.db('SPGF');
+                const collection = db.collection('Profile');
+                await collection.insertOne(body);
+            });
+        const msg = "Profile incluído com sucesso";
+        return msg;
     }
 
     removeProfile(id) {
