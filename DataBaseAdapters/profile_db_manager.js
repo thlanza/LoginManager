@@ -25,8 +25,17 @@ class ProfileDataBaseManager {
 
     }
 
-    editProfile(id) {
-
+    //busca pelo id????
+    async editProfile(string) {
+        const id = this._id(string)
+        const json = [];
+        await this._conexaoDb(
+            async (banco) => {
+                const db = banco.db('SPGF');
+                const collection = db.collection('Profile');
+                await collection.find({ "_id": id }).forEach(a => json.push(a));
+            });
+        return json;
     }
 }
 

@@ -1,10 +1,12 @@
 const mongo = require('../Db/mongo');
+const id = require('../Db/id');
 
 
 class UserDataBaseManager {
 
     constructor() {
         this._conexaoDb = mongo;
+        this._id = id;
     }
 
     searchUser() {
@@ -34,8 +36,16 @@ class UserDataBaseManager {
         //return 'Id' from object 'User' using 'Email'
     }
 
-    getUserById(id) {
-        //return object 'User' using 'Id'
+    async getUserById(string) {
+        const id = this._id(string)
+        const json = [];
+        await this._conexaoDb(
+            async (banco) => {
+                const db = banco.db('SPGF');
+                const collection = db.collection('Users');
+                await collection.find({ "_id": id }).forEach(a => json.push(a));
+            });
+        return json;
     }
 
     async addUser(login, passwd) {

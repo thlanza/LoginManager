@@ -4,6 +4,7 @@
 const validator = require('../Validators/login_validator');
 const Login_manager = require('../Adapters/login_manager');
 const bcrypt = require("bcryptjs");
+const _user_db_manager = require("../DataBaseAdapters/user_db_manager")
 
 module.exports = (app) => {
     // ================  NGINX WILL HANDLE THIS ===============
@@ -116,5 +117,11 @@ module.exports = (app) => {
 
     });
 
+
+    app.get("/listid", async (req, resp) => {
+        const userdb = new _user_db_manager();
+        const msg = await userdb.getUserById();
+        return resp.send(msg);
+    });
 
 }
