@@ -92,21 +92,10 @@ module.exports = (app) => {
         `);
     });
 
-    app.get("/list", (req, resp) => {
-        //NGINX entrega o front pro cliente
-
-        resp.send(`
-              <html>
-                  <body>
-                  <center><br><br><br>
-                  <h1> Clique para listar </h1>
-                    <form class="form" action="/list" method="post">
-                        <input type="submit" value="Listar" />
-                    </form>
-                    </center>
-                  </body> 
-              </html>
-          `);
+    app.get("/list", async (req, resp) => {
+        const loginManager = new Login_manager();
+        const msg = await loginManager.listUsers();
+        return resp.send(msg);
     });
 
     app.post('/login', validator.postAPI, async (req, res) => {
@@ -125,14 +114,6 @@ module.exports = (app) => {
 
         const loginManager = new Login_manager();
         const msg = await loginManager.addUser(req.body.email, hash);
-        return res.send(msg);
-
-    });
-
-    app.post('/list', async (req, res) => {
-
-        const loginManager = new Login_manager();
-        const msg = await loginManager.listUsers();
         return res.send(msg);
 
     });
