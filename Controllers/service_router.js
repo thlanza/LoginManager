@@ -31,10 +31,10 @@ module.exports = (app) => {
             service.addService(req.body);
         }
         catch (e) {
-            res.status(500).send(e);
+            return res.status(500).send(e);
         }
 
-        res.status(201).send('Ok');
+        return res.status(201).send('Ok');
     });
 
     app.delete('/Service', validator.delete, (req, res) => {
