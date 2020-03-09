@@ -1,54 +1,47 @@
-const mongo = require('../Db/mongo');
+const mongo = require("../Db/mongo");
 
 class ProfileDataBaseManager {
+  constructor() {
+    this._conexaoDb = mongo;
+  }
+  searchProfileForId(id) {
+    //retorn obj
 
-    constructor() {
-        this._conexaoDb = mongo;
+    //Teste Renato
+
+    try {
+      return { name: "Administrador", id: 2, desc: "Controlador de sistema" };
+    } catch (err) {
+      throw new Error("não encontrado");
     }
-    searchProfileForId(id) {
-        //retorn obj 
+  }
+  searchProfile() {
+    //return boolean
+  }
 
-        //Teste Renato
+  async addProfile(body) {
+    await this._conexaoDb(async banco => {
+      const db = banco.db("SPGF");
+      const collection = db.collection("Profile");
+      await collection.insertOne(body);
+    });
+    const msg = "Profile incluído com sucesso";
+    return msg;
+  }
 
+  removeProfile(id) {}
 
-        try {
-            return { name: "Administrador", id: 2, desc: "Controlador de sistema" }
-        } catch (err) {
-            throw new Error("não encontrado")
-        }
-
-    }
-    searchProfile() {
-        //return boolean
-    }
-
-    addProfile(body) {
-        await this._conexaoDb(
-            async (banco) => {
-                const db = banco.db('SPGF');
-                const collection = db.collection('Profile');
-                await collection.insertOne(body);
-            });
-        const msg = "Profile incluído com sucesso";
-        return msg;
-    }
-
-    removeProfile(id) {
-
-    }
-
-    //busca pelo id????
-    async editProfile(string) {
-        const id = this._id(string)
-        const json = [];
-        await this._conexaoDb(
-            async (banco) => {
-                const db = banco.db('SPGF');
-                const collection = db.collection('Profile');
-                await collection.find({ "_id": id }).forEach(a => json.push(a));
-            });
-        return json;
-    }
+  //busca pelo id????
+  async editProfile(string) {
+    const id = this._id(string);
+    const json = [];
+    await this._conexaoDb(async banco => {
+      const db = banco.db("SPGF");
+      const collection = db.collection("Profile");
+      await collection.find({ _id: id }).forEach(a => json.push(a));
+    });
+    return json;
+  }
 }
 
 module.exports = ProfileDataBaseManager;
