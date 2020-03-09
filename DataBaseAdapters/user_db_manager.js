@@ -1,14 +1,17 @@
-class UserDataBaseManager{
+const mongo = require('../Db/mongo');
 
-    constructor(){
-        //Conecta no tabela/collection User
+
+class UserDataBaseManager {
+
+    constructor() {
+        this._conexaoDb = mongo;
     }
 
     searchUser() {
         //return boolean
     }
 
-    searchUserById(id){
+    searchUserById(id) {
         //return boolean
     }
 
@@ -16,20 +19,35 @@ class UserDataBaseManager{
 
     }
 
-    listUser(){
-        //return list of object 'User'
+    async listUsers() {
+        const json = [];
+        await this._conexaoDb(
+            async (banco) => {
+                const db = banco.db('SPGF');
+                const collection = db.collection('Users');
+                await collection.find().forEach(a => json.push(a));
+            });
+        return json;
     }
 
-    getUserIdByEmail(email){
+    getUserIdByEmail(email) {
         //return 'Id' from object 'User' using 'Email'
     }
 
-    getUserById(id){
+    getUserById(id) {
         //return object 'User' using 'Id'
     }
 
-    addUser() {
-        
+    async addUser(login, passwd) {
+        const body = { login, passwd };
+        await this._conexaoDb(
+            async (banco) => {
+                const db = banco.db('SPGF');
+                const collection = db.collection('Users');
+                await collection.insertOne(body);
+            });
+        const msg = "usuario incluido com sucesso";
+        return msg;
     }
 
     removeUser(id) {
