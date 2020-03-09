@@ -1,21 +1,35 @@
-var profile_manager = require('')
-var validator = require('../Validators/profile_valitator')
+const profile_manager = require('../Adapters/profile_manager')
+const validator = require('../Validators/profile_valitator')
 
 module.exports = (app) => {
-    app.get('/Profile:id', validator.get, (req, res) => {
-        var profileManager = new profile_manager();
-        try {
-            var resp = profileManager.getProfile(req.params.idServico);
-        } catch (err) {
-            //verify err
-            return res.status(500).send();
-        }
+    const profileManager = new profile_manager();
 
-        return res.json(resp);
+    app.get('/Profile/:id', validator.get, (req, res) => {
+
+        try {
+
+            var resp = profileManager.getProfile(req.params.id);
+            return res.json(resp);
+
+        } catch (err) {
+            return res.status(500).send(err.message);
+        }
 
 
 
     });
+    app.post('Prfile', validator.post, (req, res) => {
+        try {
+
+            var resp = profileManager.addProfile(req.body)
+            return res.status(201).send(resp)
+
+        } catch (err) {
+
+            return res.status(500).send(err.message);
+        }
+
+    })
 
 
 }

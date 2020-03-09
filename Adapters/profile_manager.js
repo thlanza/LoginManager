@@ -12,10 +12,27 @@ class ProfileManager {
 
     getProfile(id) {
 
+
+        try {
+            var profile = this.profile_db.searchProfileForId(id);
+            return profile;
+
+        } catch (error) {
+            throw new Error('Perfil não encontrado.')
+        }
     }
 
-    addProfile() {
+    addProfile(obj) {
+        if (this.profile_db.searchProfile(obj)) {
+            throw new Error('Perfil já existente')
+        }
 
+        try {
+            var listProfile = this.profile_db.addProfile(obj);
+            return listProfile
+        } catch (error) {
+            throw new Error('Não foi possivel salvar perfil');
+        }
     }
 
     removeProfile(id) {
