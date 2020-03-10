@@ -6,6 +6,39 @@ class ServiceDataBaseManager {
         this._conexaoDb = mongo;
     }
 
+
+    //funções que o profile manager vai precisar
+    searchProfileByName(nameProfile, idservice) {
+
+
+        //return boolean
+    }
+    getProfileById(idservice, idProfile) {
+
+
+        //return obj Profile
+    }
+
+    addProfile(obj) {
+        //obj.name, obj.describe,obj.idService
+
+        //return listProfile
+    }
+    updateProfile(obj) {
+        //obj.name, obj.describe,obj.idService
+
+        //return listProfile
+    }
+    searchProfileById(idservice, idProfile) {
+
+        //return boolean
+    }
+    removeProfile(idService, idProfile) {
+
+        //return listProfile
+    }
+
+
     async listServices() {
         const json = [];
         await this._conexaoDb(
@@ -38,7 +71,7 @@ class ServiceDataBaseManager {
     }
 
     searchServiceById(id) {
-        //return boolean
+        return false
     }
 
     getServiceIdBySecret(secret) {

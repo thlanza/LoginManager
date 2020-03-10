@@ -1,47 +1,85 @@
-var profile_db_manager = require('../DataBaseAdapters/profile_db_manager');
-
+const service_db_manager = require('../DataBaseAdapters/service_db_manager');
+const serviceManager = require('../Adapters/service_manager');
 class ProfileManager {
 
     constructor() {
-        this.profile_db = new profile_db_manager();
+        this.service_db = new service_db_manager();
     }
 
-    listProfile() {
+    getProfile(obj) {
 
-    }
-
-    getProfile(id) {
-
+        if (this.service_db.searchServiceById(obj.idService)) {
+            throw new Error('Não é possivel realizar operação! code:1111');
+        }
 
         try {
-            var profile = this.profile_db.searchProfileForId(id);
-            return profile;
+            var profile = this.service_db.getProfileById(obj.idService, obj.idProfile);
 
+            if (profile == undefined) {
+                throw new Error('Perfil não encontrado.')
+            } else {
+                return profile;
+            }
         } catch (error) {
             throw new Error('Perfil não encontrado.')
         }
     }
 
     addProfile(obj) {
-        if (this.profile_db.searchProfile(obj)) {
-            throw new Error('Perfil já existente')
+
+        if (this.service_db.searchServiceById(obj.idService)) {
+            throw new Error('Não é possivel realizar operação! code:1111');
+        }
+
+        if (this.service_db.searchProfileByName(obj.name, obj.idService)) {
+            throw new Error('Perfil já existente');
         }
 
         try {
-            var listProfile = this.profile_db.addProfile(obj);
+            var listProfile = this.service_db.addProfile(obj);
             return listProfile
         } catch (error) {
             throw new Error('Não foi possivel salvar perfil');
         }
     }
+    updateProfile(obj) {
 
-    removeProfile(id) {
+        if (this.service_db.searchServiceById(obj.idService)) {
+            throw new Error('Não é possivel realizar operação! code:1111');
+        }
+
+        if (this.service_db.searchProfileById(obj.idService, obj.idProfile)) {
+            throw new Error('Não é possivel realizar operação! code:1111');
+        }
+
+        try {
+            var listProfile = this.service_db.updateProfile(obj)
+            return listProfile;
+        } catch (err) {
+            throw new Error('Não foi possivel Alterar os dados do perfil');
+        }
 
     }
 
-    editProfile(id) {
+    removeProfile(obj) {
+        if (this.service_db.searchServiceById(obj.idService)) {
+            throw new Error('Não é possivel realizar operação! code:1111');
+        }
+
+        if (this.service_db.searchProfileById(obj.idService, obj.idProfile)) {
+            throw new Error('Não é possivel realizar operação! code:1111');
+        }
+
+        try {
+            var listProfile = this.service_db.removeProfile(obj)
+            return listProfile;
+        } catch (err) {
+            throw new Error('Não foi possivel perfil');
+        }
 
     }
+
+
 }
 
 module.exports = ProfileManager;

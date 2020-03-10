@@ -20,16 +20,22 @@ class ProfileDataBaseManager {
   }
 
   async addProfile(body) {
-    await this._conexaoDb(async banco => {
-      const db = banco.db("SPGF");
-      const collection = db.collection("Profile");
-      await collection.insertOne(body);
-    });
-    const msg = "Profile incluído com sucesso";
-    return msg;
+    try {
+      await this._conexaoDb(async banco => {
+        const db = banco.db("SPGF");
+        const collection = db.collection("Profile");
+        await collection.insertOne(body);
+      });
+      const msg = "Profile incluído com sucesso";
+      return msg;
+    } catch (error) {
+      throw new Error("Erro de banco");
+    }
+
+
   }
 
-  removeProfile(id) {}
+  removeProfile(id) { }
 
   //busca pelo id????
   async editProfile(string) {
