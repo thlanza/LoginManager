@@ -3,8 +3,8 @@
 
 const validator = require('../Validators/login_validator');
 const Login_manager = require('../Adapters/login_manager');
-const bcrypt = require("bcryptjs");
-const _user_db_manager = require("../DataBaseAdapters/user_db_manager")
+// const bcrypt = require("bcryptjs");
+const UserDataBaseManager = require("../DataBaseAdapters/user_db_manager")
 
 module.exports = (app) => {
     // ================  NGINX WILL HANDLE THIS ===============
@@ -94,9 +94,9 @@ module.exports = (app) => {
     });
 
     app.get("/listuser", async (req, resp) => {
-        const loginManager = new Login_manager();
-        const msg = await loginManager.listUsers();
-        return resp.send(msg);
+        // const loginManager = new Login_manager();
+        // const msg = await loginManager.listUsers();
+        // return resp.send(msg);
     });
 
     app.post('/login', validator.postAPI, async (req, res) => {
@@ -110,11 +110,14 @@ module.exports = (app) => {
 
     app.post('/adduser', validator.post, async (req, res) => {
 
-        const hash = await bcrypt.hash(req.body.senha, 10);
-        const loginManager = new Login_manager();
-        const msg = await loginManager.addUser(req.body.email, hash);
-        return res.send(msg);
+        // const hash = await bcrypt.hash(req.body.senha, 10);
+        // const loginManager = new Login_manager();
+        // const msg = await loginManager.addUser(req.body.email, hash);
+        // return res.send(msg);
 
+        const _UserDataBaseManager = new UserDataBaseManager();
+        const msg = _UserDataBaseManager.addUser(req.body.email, req.body.senha)
+        return res.send(msg)
     });
 
 
