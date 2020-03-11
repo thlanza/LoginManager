@@ -3,7 +3,7 @@ var user_db_manager = require('../DataBaseAdapters/user_db_manager');
 class UserManager{
     
     constructor(){
-        this.db = new user_db_manager();
+        this.user_db = new user_db_manager();
         
     }
 
@@ -26,7 +26,9 @@ class UserManager{
         }
     }
 
-    addUser(){
+    addUser(name,email,masp){
+        
+
 
 
     }
@@ -50,6 +52,7 @@ class UserManager{
     }
 
     editUser(id){
+        
 
     }
 }
