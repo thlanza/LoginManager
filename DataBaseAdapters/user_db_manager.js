@@ -31,7 +31,7 @@ class UserDataBaseManager {
     //return boolean
   }
 
-  validateUser() {}
+  validateUser() { }
 
   async listUsers() {
     const json = await this._userCollection.find();
@@ -44,7 +44,7 @@ class UserDataBaseManager {
 
   async getUserById(id) {
     const user = await this._userCollection.find();
-      return user;
+    return user;
   }
 
   async addUser(login, passwd) {
@@ -53,23 +53,23 @@ class UserDataBaseManager {
       password: passwd
     });
 
-    const msg = await userInstance.save(function(err, user) {
-      if (err) {
-        return console.error(err);
-      } else {
-        return user.email + " mail inserted to Collection";
-      }
+    try {
+      await userInstance.save()
+      const msg = "usuário inserido com sucesso!"
+      return msg
+    } catch (err) {
+      return console.error(err);
       // console.log(user.email + " mail inserted to Collection");
-    });
+    };
 
     // const msg = login + " cadastratdo com sucesso";
     // console.log(msg)
-    return msg;
+    // return msg;
   }
 
-  removeUser(id) {}
+  removeUser(id) { }
 
-  editUser(id) {}
+  editUser(id) { }
 }
 
 module.exports = UserDataBaseManager;
