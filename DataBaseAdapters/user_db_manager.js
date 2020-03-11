@@ -1,6 +1,5 @@
-const mongo = require('../Db/mongo');
-const id = require('../Db/id');
-
+const mongoose = require("mongoose");
+const db = require("../Db/mongo");
 
 class UserDataBaseManager {
 
