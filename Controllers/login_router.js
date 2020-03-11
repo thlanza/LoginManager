@@ -3,8 +3,9 @@
 
 const validator = require('../Validators/login_validator');
 const Login_manager = require('../Adapters/login_manager');
-// const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 const UserDataBaseManager = require("../DataBaseAdapters/user_db_manager")
+const Users = require("../Db/user_model");
 
 module.exports = (app) => {
     // ================  NGINX WILL HANDLE THIS ===============
@@ -28,18 +29,18 @@ module.exports = (app) => {
     //     }
     // });
 
-    app.post('/Login/:hash', validator.postAPI, (req, res) =>{
+    app.post('/Login/:hash', validator.postAPI, (req, res) => {
         var login = new login_manager();
-        try{
+        try {
             let success = login.validarLoginAPI(req.body, req.params.hash);
-            if(success === true){
+            if (success === true) {
                 return res.send('Sucesso.') //O Front deverá redirecionar o usuário para o serviço que o chamou
             }
-            else{
+            else {
                 return res.status(401).send();
             }
         }
-        catch(e){
+        catch (e) {
             return res.status(500).send(e);
         }
     });
@@ -93,15 +94,17 @@ module.exports = (app) => {
         `);
     });
 
-    app.get("/listuser", async (req, resp) => {
+    app.get("/listuser", async (req, res) => {
+
         const loginManager = new Login_manager();
         const msg = await loginManager.listUsers();
-        return resp.send(msg);
+        return res.send(msg);
+
     });
 
     app.post('/login', validator.post, async (req, res) => {
 
-        // const hash = await bcrypt.hash(req.body.senha, 10);
+        const hash = await bcrypt.hash(req.body.senha, 10);
         const loginManager = new Login_manager();
         const msg = await loginManager.validarLogin(req.body.email, hash);
         return res.send(msg)
@@ -115,9 +118,14 @@ module.exports = (app) => {
         // const msg = await loginManager.addUser(req.body.email, hash);
         // return res.send(msg);
 
-        const _UserDataBaseManager = new UserDataBaseManager();
-        const msg = await _UserDataBaseManager.addUser(req.body.email, req.body.senha)
-        return res.send(msg)
+        // const _UserDataBaseManager = new UserDataBaseManager();
+        // const msg = await _UserDataBaseManager.addUser(req.body.email, req.body.senha)
+        // return res.send(msg)
+
+        const hash = await bcrypt.hashSync(req.body.senha, 10);
+        const loginManager = new Login_manager();
+        const msg = await loginManager.addUser(req.body.email, hash);
+        return res.send(msg);
     });
 
 

@@ -1,27 +1,6 @@
-const mongoose = require("mongoose");
-const db = require("../Db/mongo");
+const Users = require("../Db/user_model");
 
 class UserDataBaseManager {
-    constructor() {
-        this._db = db;
-        this._mongoose = mongoose;
-        this._db.once("open", () =>
-            console.log("Connected at User database success")
-        );
-
-        this._UsersSchema = new this._mongoose.Schema({
-            email: {
-                type: String,
-                required: true
-            },
-            password: {
-                type: String,
-                required: true
-            }
-        });
-
-        this._userCollection = mongoose.model("Users", this._UsersSchema);
-    }
 
     searchUser() {
         //return boolean
@@ -34,8 +13,18 @@ class UserDataBaseManager {
     validateUser() { }
 
     async listUsers() {
-        const json = await this._userCollection.find();
-        return json;
+
+        const msg = Users.find({})
+        return msg;
+        // function (err, users) {
+        // let username = users.map(function (user) {
+        //     return user.email;
+        // });
+
+        // resp.json({ emails: username });
+        // console.log({ emails: username });
+        // const msg = { emails: username };
+        // });
     }
 
     getUserIdByEmail(email) {
@@ -48,28 +37,24 @@ class UserDataBaseManager {
     }
 
     async addUser(login, passwd) {
-        const userInstance = new this._userCollection({
-            email: login,
-            password: passwd
-        });
 
         try {
-            await userInstance.save()
-            const msg = "usuário inserido com sucesso!"
-            return msg
+            const newUser = new Users({
+                email: login,
+                password: passwd
+            });
+            await newUser.save();
+            const msg = `Usuário incluido com sucesso`;
+            return msg;
         } catch (err) {
-            return console.error(err);
-            // console.log(user.email + " mail inserted to Collection");
-        };
-
-        // const msg = login + " cadastratdo com sucesso";
-        // console.log(msg)
-        // return msg;
+            return console.log(err);
+        }
     }
 
     removeUser(id) { }
 
     editUser(id) { }
+
 }
 
 module.exports = UserDataBaseManager;

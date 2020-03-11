@@ -1,5 +1,7 @@
 // var token_db_manager = require('../DataBaseAdapters/token_db_manager');
 var user_db_manager = require('../DataBaseAdapters/user_db_manager');
+const Users = require("../Db/user_model");
+const bcrypt = require("bcryptjs");
 
 class Login {
 
