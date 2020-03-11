@@ -94,9 +94,9 @@ module.exports = (app) => {
     });
 
     app.get("/listuser", async (req, resp) => {
-        // const loginManager = new Login_manager();
-        // const msg = await loginManager.listUsers();
-        // return resp.send(msg);
+        const loginManager = new Login_manager();
+        const msg = await loginManager.listUsers();
+        return resp.send(msg);
     });
 
     app.post('/login', validator.postAPI, async (req, res) => {
