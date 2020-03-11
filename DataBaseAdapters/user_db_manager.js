@@ -43,10 +43,8 @@ class UserDataBaseManager {
   }
 
   async getUserById(id) {
-    //   const json = [];
-    console.log(await this._userCollection.find(id));
-    //   .forEach(a => json.push(a)
-    //   return json;
+    const user = await this._userCollection.find();
+      return user;
   }
 
   async addUser(login, passwd) {

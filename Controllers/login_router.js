@@ -122,8 +122,8 @@ module.exports = (app) => {
 
 
     app.get("/listid", async (req, resp) => {
-        const userdb = new _user_db_manager();
-        const msg = await userdb.getUserById();
+        const _UserDataBaseManager = new UserDataBaseManager();
+        const msg = await _UserDataBaseManager.getUserById("5e68d9cf8f837e0de8781dce");
         return resp.send(msg);
     });
 
