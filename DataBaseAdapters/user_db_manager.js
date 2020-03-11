@@ -34,10 +34,8 @@ class UserDataBaseManager {
   validateUser() {}
 
   async listUsers() {
-    //   const json = [];
-    console.log(await this._userCollection.find());
-    //   .forEach(a => json.push(a)
-    //   return json;
+    const json = await this._userCollection.find();
+    return json;
   }
 
   getUserIdByEmail(email) {
@@ -52,17 +50,23 @@ class UserDataBaseManager {
   }
 
   async addUser(login, passwd) {
-    const userInstance = new this._userCollection({email: login, password: passwd });
+    const userInstance = new this._userCollection({
+      email: login,
+      password: passwd
+    });
 
-    await userInstance.save(function(err, user) {
+    const msg = await userInstance.save(function(err, user) {
       if (err) {
         return console.error(err);
       } else {
-        console.log(user.email + "mail inserted to Collection");
-        const msg = "Multiple documents inserted to Collection";
-        return msg;
+        return user.email + " mail inserted to Collection";
       }
+      // console.log(user.email + " mail inserted to Collection");
     });
+
+    // const msg = login + " cadastratdo com sucesso";
+    // console.log(msg)
+    return msg;
   }
 
   removeUser(id) {}

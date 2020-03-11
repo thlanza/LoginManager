@@ -116,7 +116,7 @@ module.exports = (app) => {
         // return res.send(msg);
 
         const _UserDataBaseManager = new UserDataBaseManager();
-        const msg = _UserDataBaseManager.addUser(req.body.email, req.body.senha)
+        const msg = await _UserDataBaseManager.addUser(req.body.email, req.body.senha)
         return res.send(msg)
     });
 
