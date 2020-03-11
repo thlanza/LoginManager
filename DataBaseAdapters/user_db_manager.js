@@ -17,7 +17,7 @@ class UserDataBaseManager {
         //return boolean
     }
 
-    validateUser() {
+    validateUser() { 
 
     }
 
