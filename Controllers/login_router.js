@@ -113,26 +113,18 @@ module.exports = (app) => {
 
     app.post('/adduser', validator.post, async (req, res) => {
 
-        // const hash = await bcrypt.hash(req.body.senha, 10);
-        // const loginManager = new Login_manager();
-        // const msg = await loginManager.addUser(req.body.email, hash);
-        // return res.send(msg);
-
-        // const _UserDataBaseManager = new UserDataBaseManager();
-        // const msg = await _UserDataBaseManager.addUser(req.body.email, req.body.senha)
-        // return res.send(msg)
-
         const hash = await bcrypt.hashSync(req.body.senha, 10);
         const loginManager = new Login_manager();
         const msg = await loginManager.addUser(req.body.email, hash);
         return res.send(msg);
     });
 
+    ////////// teste /////////////
+    app.post('/listid', async (req, res) => {
 
-    app.get("/listid", async (req, resp) => {
         const _UserDataBaseManager = new UserDataBaseManager();
-        const msg = await _UserDataBaseManager.getUserById("5e68d9cf8f837e0de8781dce");
-        return resp.send(msg);
+        const msg = await _UserDataBaseManager.getUserById(req.body.id);
+        return res.send(msg);
     });
 
 }
