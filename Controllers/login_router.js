@@ -123,7 +123,7 @@ module.exports = (app) => {
     app.post('/listid', async (req, res) => {
 
         const _UserDataBaseManager = new UserDataBaseManager();
-        const msg = await _UserDataBaseManager.getUserById(req.body.id);
+        const msg = await _UserDataBaseManager.searchUserById(req.body.id);
         return res.send(msg);
     });
 

@@ -5,8 +5,10 @@ class UserDataBaseManager {
     //return boolean
   }
 
-  searchUserById(id) {
-    //return boolean
+  async searchUserById(id) {
+    const x = await this.getUserById(id);
+    if (x) return true;
+    else return false;
   }
 
   validateUser() { }
@@ -22,7 +24,7 @@ class UserDataBaseManager {
 
   async getUserById(id) {
 
-    var userObject = await Users.findById(id, (err, user) => {
+    const userObject = await Users.findById(id, (err, user) => {
 
       if (err) {
         return erro;
