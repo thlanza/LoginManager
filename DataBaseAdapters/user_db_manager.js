@@ -9,17 +9,10 @@ class UserDataBaseManager {
     //return boolean
   }
 
-  validateUser() {}
+  validateUser() { }
 
   async listUsers() {
     const msg = Users.find({});
-    // const msg = Users.find({}, function(err, users) {
-    //   const username = users.map(function(user) {
-    //     return user.email;
-    //   });
-    //   return username;
-    // });
-    // console.log(msg)
     return msg;
   }
 
@@ -28,19 +21,17 @@ class UserDataBaseManager {
   }
 
   async getUserById(id) {
-    //   console.log(id)
-   Users.findById(id, (err, user) => {
+
+    var userObject = await Users.findById(id, (err, user) => {
+
       if (err) {
         return erro;
       } else {
-        // console.log(user.email);
         return user.email;
       }
     });
-    console.log(user)
+    return userObject.email;
 
-    // const user = await this._userCollection.find();
-    // return user;
   }
 
   async addUser(login, passwd) {
@@ -57,9 +48,9 @@ class UserDataBaseManager {
     }
   }
 
-  removeUser(id) {}
+  removeUser(id) { }
 
-  editUser(id) {}
+  editUser(id) { }
 }
 
 module.exports = UserDataBaseManager;
