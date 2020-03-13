@@ -117,11 +117,17 @@ module.exports = (app) => {
     // });
 
     ////////// teste /////////////
-    app.post('/byid', async (req, res) => {
+    app.post('/addUser', async (req, res) => {
 
         const _UserDataBaseManager = new UserDataBaseManager();
-        const msg = await _UserDataBaseManager.getUserById(req.body);
+        const msg = await _UserDataBaseManager.addUser(req.body);
         return res.send(msg);
     });
+    // app.post('/byid', async (req, res) => {
+
+    //     const _UserDataBaseManager = new UserDataBaseManager();
+    //     const msg = await _UserDataBaseManager.getUserById(req.body);
+    //     return res.send(msg);
+    // });
 
 }

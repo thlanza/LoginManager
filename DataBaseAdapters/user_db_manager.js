@@ -12,16 +12,20 @@ class UserDataBaseManager {
   }
 
   async getUserById(id) {
-console.log(id)
-    const userObject = await Users.findById(id, (err, user) => {
+    // const userObject = await 
+    
+    Users.findById(id, (err, user) => {
+
+      console.log(user)
 
       if (err) {
-        return erro;
+        console.log(err)
+        return err;
       } else {
         return user.email;
       }
     });
-    return userObject.email;
+    // return userObject.email;
 
   }
 
@@ -30,12 +34,12 @@ console.log(id)
     try {
       const newUser = new Users({
         name: body.name,
-        acessos:{
+        acessos: {
           service: body.service,
           profile: body.profile
         },
         email: body.email,
-        password: body.senha
+        password: body.password
       });
       await newUser.save();
       const msg = `Usuário incluido com sucesso`;
