@@ -27,10 +27,22 @@ class UserManager{
     }
 
     addUser(name,email,masp){
-        
 
+        if (this.user_db.searchUserByEmail(email)) {
+            throw new Error("Email já cadastrado");
+        }
+        else if(this.user_db.searchUserByMasp(masp)){
+            throw new Error("Masp Já cadastrado")
+        }
 
+        try{
+            this.user_db.addUser(nome,email,masp);
+        }
+        catch(e){
+            this.log.fail(e);
+        }
 
+        this.log.success("Adicionado!");
     }
 
     deleteUser(id){
@@ -51,9 +63,29 @@ class UserManager{
 
     }
 
-    editUser(id){
-        
+    editUser(id,name,maps,email){
+        if(!id || id ==""){
+            throw new Error("Id inválido. ");
+        }
+        else if (!name || name == ""){
+            throw new Error("Nome inválido. ");
+        }
+        else if (!masp || masp == ""){
+            throw new Error("Nome inválido. ");
+        }
+        else if (!email || email == ""){
+            throw new Error("Nome inválido. ");
+        }
 
+        try{
+            this.user_db.editUser(id,name,masp,email);
+        }
+        catch(e){
+            this.log.Fail("Erro",e);
+            throw new Error(e);
+        }
+
+        this.log.success("Editado");
     }
 }
 
