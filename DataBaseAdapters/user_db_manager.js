@@ -7,8 +7,15 @@ class UserDataBaseManager {
     return msg;
   }
 
-  getUserIdByEmail(email) {
-    //return 'Id' from object 'User' using 'Email'
+  async getUserIdByEmail(mail) {
+    const user = await Users.find({email: mail}, (err, user) => {
+      if (err) {
+        return err;
+      } else {
+        return user;
+      }
+    });
+    return user[0].id;
   }
 
   async getUserById(id) {

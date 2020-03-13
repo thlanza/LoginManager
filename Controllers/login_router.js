@@ -64,6 +64,7 @@ module.exports = app => {
                   </body> 
               </html>
           `);
+<<<<<<< HEAD
   });
 
   // app.get("/adduser", (req, resp) => {
@@ -148,3 +149,90 @@ module.exports = app => {
   //     return res.send(msg);
   // });
 };
+
+app.post('/byid', async (req, res) => {
+
+  const _UserDataBaseManager = new UserDataBaseManager();
+  const msg = await _UserDataBaseManager.getUserById(req.body.id);
+  return res.send(msg);
+});
+app.post('/byemail', async (req, res) => {
+
+  const _UserDataBaseManager = new UserDataBaseManager();
+  const msg = await _UserDataBaseManager.getUserIdByEmail(req.body.email);
+  return res.send(msg);
+});
+
+=======
+    });
+
+    // app.get("/adduser", (req, resp) => {
+
+    //     resp.send(`
+    //         <html>
+    //             <body>
+    //             <center><br><br><br>
+    //             <h1> Auth AddUser teste </h1>
+    //             <form class="form" action="/adduser" method="post">
+    //                 <div class="formulario">
+    //                 <label for="email">Email</label>
+    //                 <input id="email" type="email" name="email" placeholder="insira o login" />
+    //                 </div>
+    //                 <div class="formulario">
+    //                 <label for="senha">Senha</label>
+    //                 <input id="senha" type="password" name="senha" placeholder="insira o senha"/>
+    //                 </div>
+    //                 <input type="submit" value="Enviar" />
+    //             </form>
+    //             </center>
+    //             </body> 
+    //         </html>
+    //     `);
+    // });
+
+    app.get("/listuser", async (req, res) => {
+
+        const loginManager = new Login_manager();
+        const msg = await loginManager.listUsers();
+        return res.send(msg);
+
+    });
+
+    app.post('/login', validator.post, async (req, res) => {
+
+        const loginManager = new Login_manager();
+        const msg = await loginManager.validarLogin(req.body);
+        return res.send(msg);
+
+    });
+
+    // app.post('/adduser', validator.post, async (req, res) => {
+
+    //     const hash = await bcrypt.hashSync(req.body.senha, 10);
+    //     const loginManager = new Login_manager();
+    //     const msg = await loginManager.addUser(req.body.email, hash);
+    //     return res.send(msg);
+    // });
+
+    ////////// teste /////////////
+    app.post('/addUser', validator.post, async (req, res) => {
+
+        const _UserDataBaseManager = new UserDataBaseManager();
+        const msg = await _UserDataBaseManager.addUser(req.body);
+        return res.send(msg);
+    });
+    app.post('/byid', async (req, res) => {
+
+        const _UserDataBaseManager = new UserDataBaseManager();
+        const msg = await _UserDataBaseManager.getUserById(req.body.id);
+        return res.send(msg);
+    });
+    app.post('/byemail', async (req, res) => {
+
+        const _UserDataBaseManager = new UserDataBaseManager();
+        const msg = await _UserDataBaseManager.getUserIdByEmail(req.body.email);
+        return res.send(msg);
+    });
+
+}
+>>>>>>> d2b7817275c808032364809e00cc0e6b47ebdcc7
