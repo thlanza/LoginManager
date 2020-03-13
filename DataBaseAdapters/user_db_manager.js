@@ -12,9 +12,7 @@ class UserDataBaseManager {
   }
 
   async getUserById(id) {
-    // const userObject = await 
-    
-    Users.findById(id, (err, user) => {
+    const userObject = await Users.findById(id, (err, user) => {
 
       console.log(user)
 
@@ -25,7 +23,8 @@ class UserDataBaseManager {
         return user.email;
       }
     });
-    // return userObject.email;
+    
+    return userObject.email;
 
   }
 
