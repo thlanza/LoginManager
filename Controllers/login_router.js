@@ -64,7 +64,7 @@ module.exports = app => {
                   </body> 
               </html>
           `);
-<<<<<<< HEAD
+
   });
 
   // app.get("/adduser", (req, resp) => {
@@ -163,8 +163,7 @@ app.post('/byemail', async (req, res) => {
   return res.send(msg);
 });
 
-=======
-    });
+  
 
     // app.get("/adduser", (req, resp) => {
 
@@ -234,5 +233,5 @@ app.post('/byemail', async (req, res) => {
         return res.send(msg);
     });
 
-}
->>>>>>> d2b7817275c808032364809e00cc0e6b47ebdcc7
+
+
