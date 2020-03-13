@@ -1,7 +1,7 @@
 const Users = require("../Db/user_model");
+const bcrypt = require("bcryptjs");
 
 class UserDataBaseManager {
-
   async listUsers() {
     const msg = Users.find({});
     return msg;
@@ -12,26 +12,24 @@ class UserDataBaseManager {
   }
 
   async getUserById(id) {
-    // const userObject = await 
-    
-    Users.findById(id, (err, user) => {
+    // const userObject = await
 
-      console.log(user)
+    Users.findById(id, (err, user) => {
+      console.log(user);
 
       if (err) {
-        console.log(err)
+        console.log(err);
         return err;
       } else {
         return user.email;
       }
     });
     // return userObject.email;
-
   }
 
   async addUser(body) {
-
     try {
+      let hash = await bcrypt.hash(body.password, 10);
       const newUser = new Users({
         name: body.name,
         acessos: {
@@ -39,8 +37,9 @@ class UserDataBaseManager {
           profile: body.profile
         },
         email: body.email,
-        password: body.password
+        password: hash
       });
+
       await newUser.save();
       const msg = `Usuário incluido com sucesso`;
       return msg;
@@ -49,9 +48,9 @@ class UserDataBaseManager {
     }
   }
 
-  removeUser(id) { }
+  removeUser(id) {}
 
-  editUser(id) { }
+  editUser(id) {}
 }
 
 module.exports = UserDataBaseManager;
