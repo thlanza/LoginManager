@@ -5,7 +5,7 @@ function post(req, res, next) {
   req.checkBody('name', 'Nome não pode ser vazio.').notEmpty();
   req.checkBody('service', 'Serviço não pode ser vazio.').notEmpty();
   req.checkBody('profile', 'Profile não pode ser vazio.').notEmpty();
-  req.checkBody('senha', 'Favor informar uma senha.').notEmpty();
+  req.checkBody('password', 'Favor informar uma senha.').notEmpty();
 
   const errors = req.validationErrors();
 
@@ -30,7 +30,7 @@ function postAPI(req, res, next) {
   req.checkBody('name', 'Nome não pode ser vazio.').notEmpty();
   req.checkBody('service', 'Serviço não pode ser vazio.').notEmpty();
   req.checkBody('profile', 'Profile não pode ser vazio.').notEmpty();
-  req.checkBody('senha', 'Favor informar uma senha.').notEmpty();
+  req.checkBody('password', 'Favor informar uma senha.').notEmpty();
 
   const errors = req.validationErrors();
 
