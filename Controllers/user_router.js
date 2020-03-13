@@ -5,6 +5,7 @@ module.exports = (app) => {
 
     app.get('/User', (req, res) => {
 
+        return res.json("olá mundo")
     });
 
     app.get('/User/:id', (req, res) => {
