@@ -129,5 +129,11 @@ module.exports = (app) => {
         const msg = await _UserDataBaseManager.getUserById(req.body.id);
         return res.send(msg);
     });
+    app.post('/byemail', async (req, res) => {
+
+        const _UserDataBaseManager = new UserDataBaseManager();
+        const msg = await _UserDataBaseManager.getUserIdByEmail(req.body.email);
+        return res.send(msg);
+    });
 
 }
