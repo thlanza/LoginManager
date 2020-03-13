@@ -1,20 +1,20 @@
 var mongoose = require('mongoose');
 
-const Profile = mongoose.model(
-    "Profile",
+const ServiceProfile = mongoose.model(
+    "ServiceProfile",
     new mongoose.Schema(
         {
             name: {
                 type: String,
                 required: true
             },
-            description: {
+            profile: [{
                 type: String,
                 required: true
-            }
+            }]
         },
-        { collection: "Profile" }
+        { collection: "ServiceProfile" }
     )
 );
 
-module.exports = Profile;
+module.exports = ServiceProfile;

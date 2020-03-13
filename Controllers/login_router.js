@@ -3,9 +3,7 @@
 
 const validator = require('../Validators/login_validator');
 const Login_manager = require('../Adapters/login_manager');
-const bcrypt = require("bcryptjs");
 const UserDataBaseManager = require("../DataBaseAdapters/user_db_manager")
-const Users = require("../Db/user_model");
 
 module.exports = (app) => {
     // ================  NGINX WILL HANDLE THIS ===============
@@ -70,29 +68,29 @@ module.exports = (app) => {
           `);
     });
 
-    app.get("/adduser", (req, resp) => {
+    // app.get("/adduser", (req, resp) => {
 
-        resp.send(`
-            <html>
-                <body>
-                <center><br><br><br>
-                <h1> Auth AddUser teste </h1>
-                <form class="form" action="/adduser" method="post">
-                    <div class="formulario">
-                    <label for="email">Email</label>
-                    <input id="email" type="email" name="email" placeholder="insira o login" />
-                    </div>
-                    <div class="formulario">
-                    <label for="senha">Senha</label>
-                    <input id="senha" type="password" name="senha" placeholder="insira o senha"/>
-                    </div>
-                    <input type="submit" value="Enviar" />
-                </form>
-                </center>
-                </body> 
-            </html>
-        `);
-    });
+    //     resp.send(`
+    //         <html>
+    //             <body>
+    //             <center><br><br><br>
+    //             <h1> Auth AddUser teste </h1>
+    //             <form class="form" action="/adduser" method="post">
+    //                 <div class="formulario">
+    //                 <label for="email">Email</label>
+    //                 <input id="email" type="email" name="email" placeholder="insira o login" />
+    //                 </div>
+    //                 <div class="formulario">
+    //                 <label for="senha">Senha</label>
+    //                 <input id="senha" type="password" name="senha" placeholder="insira o senha"/>
+    //                 </div>
+    //                 <input type="submit" value="Enviar" />
+    //             </form>
+    //             </center>
+    //             </body> 
+    //         </html>
+    //     `);
+    // });
 
     app.get("/listuser", async (req, res) => {
 
@@ -104,26 +102,25 @@ module.exports = (app) => {
 
     app.post('/login', validator.post, async (req, res) => {
 
-        const hash = await bcrypt.hash(req.body.senha, 10);
         const loginManager = new Login_manager();
-        const msg = await loginManager.validarLogin(req.body.email, hash);
-        return res.send(msg)
-
-    });
-
-    app.post('/adduser', validator.post, async (req, res) => {
-
-        const hash = await bcrypt.hashSync(req.body.senha, 10);
-        const loginManager = new Login_manager();
-        const msg = await loginManager.addUser(req.body.email, hash);
+        const msg = await loginManager.validarLogin(req.body);
         return res.send(msg);
+
     });
+
+    // app.post('/adduser', validator.post, async (req, res) => {
+
+    //     const hash = await bcrypt.hashSync(req.body.senha, 10);
+    //     const loginManager = new Login_manager();
+    //     const msg = await loginManager.addUser(req.body.email, hash);
+    //     return res.send(msg);
+    // });
 
     ////////// teste /////////////
-    app.post('/listid', async (req, res) => {
+    app.post('/byid', async (req, res) => {
 
         const _UserDataBaseManager = new UserDataBaseManager();
-        const msg = await _UserDataBaseManager.searchUserById(req.body.id);
+        const msg = await _UserDataBaseManager.getUserById(req.body);
         return res.send(msg);
     });
 

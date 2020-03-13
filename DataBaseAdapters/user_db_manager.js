@@ -1,17 +1,6 @@
 const Users = require("../Db/user_model");
 
 class UserDataBaseManager {
-  searchUser() {
-    //return boolean
-  }
-
-  async searchUserById(id) {
-    const x = await this.getUserById(id);
-    if (x) return true;
-    else return false;
-  }
-
-  validateUser() { }
 
   async listUsers() {
     const msg = Users.find({});
@@ -23,7 +12,7 @@ class UserDataBaseManager {
   }
 
   async getUserById(id) {
-
+console.log(id)
     const userObject = await Users.findById(id, (err, user) => {
 
       if (err) {
@@ -36,11 +25,17 @@ class UserDataBaseManager {
 
   }
 
-  async addUser(login, passwd) {
+  async addUser(body) {
+
     try {
       const newUser = new Users({
-        email: login,
-        password: passwd
+        name: body.name,
+        acessos:{
+          service: body.service,
+          profile: body.profile
+        },
+        email: body.email,
+        password: body.senha
       });
       await newUser.save();
       const msg = `Usuário incluido com sucesso`;
