@@ -4,6 +4,7 @@
 const validator = require("../Validators/login_validator");
 const Login_manager = require("../Adapters/login_manager");
 const UserDataBaseManager = require("../DataBaseAdapters/user_db_manager");
+const ServiceDataBaseManager = require("../DataBaseAdapters/service_db_manager");
 
 module.exports = app => {
   app.get("/", (req, resp) => {
@@ -95,9 +96,35 @@ module.exports = app => {
     const msg = await _UserDataBaseManager.getUserById(req.body.id);
     return res.send(msg);
   });
-  app.post("/removeUser", async (req, res) => {
+  app.post("/addUser", async (req, res) => {
     const _UserDataBaseManager = new UserDataBaseManager();
-    const msg = await _UserDataBaseManager.removeUser(req.body.id);
+    const msg = await _UserDataBaseManager.addUser(req.body);
+    return res.send(msg);
+  });
+
+  app.post("/addService", async (req, res) => {
+    const _Service = new ServiceDataBaseManager();
+    const msg = await _Service.addService(req.body);
+    return res.send(msg);
+  });
+  app.post("/getServiceById", async (req, res) => {
+    const _Service = new ServiceDataBaseManager();
+    const msg = await _Service.getServiceById(req.body.id);
+    return res.send(msg);
+  });
+  app.get("/listServices", async (req, res) => {
+    const _Service = new ServiceDataBaseManager();
+    const msg = await _Service.listServices();
+    return res.send(msg);
+  });
+  app.post("/getServiceByName", async (req, res) => {
+    const _Service = new ServiceDataBaseManager();
+    const msg = await _Service.getServiceByName(req.body.service);
+    return res.send(msg);
+  });
+  app.post("/removeService", async (req, res) => {
+    const _Service = new ServiceDataBaseManager();
+    const msg = await _Service.removeService(req.body.id);
     return res.send(msg);
   });
 

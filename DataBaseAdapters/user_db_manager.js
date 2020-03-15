@@ -3,23 +3,21 @@ const Users = require("../Db/user_model");
 const bcrypt = require("bcryptjs");
 
 class UserDataBaseManager {
-  async listUsers() {
-    const msg = Users.find({});
-    return msg;
-  }
 
   async validId(id) {
     const isValid = await mongoose.Types.ObjectId.isValid(id);
     return isValid;
   }
-
   async existId(id) {
     const cont = await Users.countDocuments({ _id: id }, function(err, count) {
       if (count > 0) console.log(count);
     });
     return cont;
   }
-
+  async listUsers() {
+    const msg = Users.find({});
+    return msg;
+  }
   async getUserIdByEmail(mail) {
     const user = await Users.find({ email: mail }, (err, user) => {
       if (err) {
@@ -30,7 +28,6 @@ class UserDataBaseManager {
     });
     return user[0].id;
   }
-
   async getUserById(id) {
     if ((await this.validId(id)) == false) {
       const msg = "id invalido";
@@ -52,7 +49,6 @@ class UserDataBaseManager {
       return userObject.email;
     }
   }
-
   async addUser(body) {
     try {
       let hash = await bcrypt.hash(body.password, 10);
@@ -73,7 +69,6 @@ class UserDataBaseManager {
       return console.log(err);
     }
   }
-
   async removeUser(id) {
     if ((await this.validId(id)) == false) {
       const msg = "id invalido";

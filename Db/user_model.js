@@ -1,3 +1,4 @@
+require("./mongo");
 var mongoose = require("mongoose");
 
 const Users = mongoose.model(

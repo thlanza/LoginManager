@@ -1,102 +1,129 @@
-const mongo = require('../Db/mongo');
+const mongoose = require("mongoose");
+const Service = require("../Db/serviceProfile_model");
 
 class ServiceDataBaseManager {
-
-    constructor() {
-        this._conexaoDb = mongo;
+  // //funções que o profile manager vai precisar
+  // searchProfileByName(nameProfile, idservice) {
+  //     //return boolean
+  // }
+  // getProfileById(idservice, idProfile) {
+  //     //return obj Profile
+  // }
+  // addProfile(obj) {
+  //     //obj.name, obj.describe,obj.idService
+  //     //return listProfile
+  // }
+  // updateProfile(obj) {
+  //     //obj.name, obj.describe,obj.idService
+  //     //return listProfile
+  // }
+  // searchProfileById(idservice, idProfile) {
+  //     //return boolean
+  // }
+  // removeProfile(idService, idProfile) {
+  //     //return listProfile
+  // }
+  async validId(id) {
+    const isValid = await mongoose.Types.ObjectId.isValid(id);
+    return isValid;
+  }
+  async existId(id) {
+    const cont = await Service.countDocuments({ _id: id }, function(
+      err,
+      count
+    ) {
+      if (count > 0) console.log(count);
+    });
+    return cont;
+  }
+  async existService(service) {
+    const cont = await Service.countDocuments({ service: service }, function(
+      err,
+      count
+    ) {
+      if (count > 0) console.log(count);
+    });
+    return cont;
+  }
+  async listServices() {
+    const msg = Service.find({});
+    return msg;
+  }
+  async getServiceById(id) {
+    if ((await this.validId(id)) == false) {
+      const msg = "id invalido";
+      return msg;
     }
 
-
-    //funções que o profile manager vai precisar
-    searchProfileByName(nameProfile, idservice) {
-
-
-        //return boolean
+    if ((await this.existId(id)) <= 0) {
+      const msg = "id nao existente no banco";
+      return msg;
+    } else {
+      const serObject = await Service.findById(id, (err, serv) => {
+        if (err) {
+          console.log(err);
+          return err;
+        } else {
+          return serv.service;
+        }
+      });
+      return serObject.service;
     }
-    getProfileById(idservice, idProfile) {
-
-
-        //return obj Profile
+  }
+  async getServiceByName(name) {
+    if ((await this.existService(name)) <= 0) {
+      const msg = "Service nao existente no banco";
+      return msg;
+    } else {
+      const serObject = await Service.findOne(
+        { service: name },
+        (err, serv) => {
+          if (err) {
+            console.log(err);
+            return err;
+          } else {
+            return serv.service;
+          }
+        }
+      );
+      return serObject.service;
     }
-
-    addProfile(obj) {
-        //obj.name, obj.describe,obj.idService
-
-        //return listProfile
+  }
+  async addService(body) {
+    try {
+      const service = new Service({
+        service: body.service,
+        profile: body.profile
+      });
+      await service.save();
+      const msg = `incluido com sucesso`;
+      return msg;
+    } catch (err) {
+      return console.log(err);
     }
-    updateProfile(obj) {
-        //obj.name, obj.describe,obj.idService
-
-        //return listProfile
+  }
+  async removeService(id) {
+    if ((await this.validId(id)) == false) {
+      const msg = "id invalido";
+      return msg;
     }
-    searchProfileById(idservice, idProfile) {
-
-        //return boolean
+    if ((await this.existId(id)) <= 0) {
+      const msg = "id nao existente no banco";
+      return msg;
+    } else {
+      await Service.findOneAndRemove({ _id: id }, err => {
+        if (err) {
+          console.log(err);
+          return err;
+        }
+      });
+      const msg = "Deletado";
+      console.log(msg);
+      return msg;
     }
-    removeProfile(idService, idProfile) {
+  }
 
-        //return listProfile
-    }
-
-
-    async listServices() {
-        const json = [];
-        await this._conexaoDb(
-            async (banco) => {
-                const db = banco.db('SPGF');
-                const collection = db.collection('Service');
-                await collection.find().forEach(a => json.push(a));
-            });
-        return json;
-    }
-
-    async getServiceById(string) {
-        const id = this._id(string)
-        const json = [];
-        await this._conexaoDb(
-            async (banco) => {
-                const db = banco.db('SPGF');
-                const collection = db.collection('Service');
-                await collection.find({ "_id": id }).forEach(a => json.push(a));
-            });
-        return json;
-    }
-
-    searchServiceByName(name) {
-        //return boolean
-    }
-
-    searchServiceByDomain(domain) {
-        //return boolean
-    }
-
-    searchServiceById(id) {
-        return false
-    }
-
-    getServiceIdBySecret(secret) {
-        //return 'Id' from object 'Service'
-    }
-
-    async addService(name, domain) {
-        const body = { name, domain };
-        await this._conexaoDb(
-            async (banco) => {
-                const db = banco.db('SPGF');
-                const collection = db.collection('Service');
-                await collection.insertOne(body);
-            });
-        const msg = "Serviço incluido com sucesso";
-        return msg;
-    }
-
-    removeService(id) {
-
-    }
-
-    editService(id, name, domain) {
-
-    }
+  editService(id, name, domain) {}
 }
 
 module.exports = ServiceDataBaseManager;
