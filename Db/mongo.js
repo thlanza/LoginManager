@@ -17,7 +17,7 @@ const options = {
 
 module.exports = mongoose.connect(url, options)
   .then(() => {
-    console.log("CONEXÃO ABERTA COM SUCESSO!!");
+    console.log("Conected success!");
   })
   .catch(err => {
     console.log(err);

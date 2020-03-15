@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const Users = require("../Db/user_model");
 const bcrypt = require("bcryptjs");
 
@@ -7,8 +8,20 @@ class UserDataBaseManager {
     return msg;
   }
 
+  async validId(id) {
+    const isValid = await mongoose.Types.ObjectId.isValid(id);
+    return isValid;
+  }
+
+  async existId(id) {
+    const cont = await Users.countDocuments({ _id: id }, function(err, count) {
+      if (count > 0) console.log(count);
+    });
+    return cont;
+  }
+
   async getUserIdByEmail(mail) {
-    const user = await Users.find({email: mail}, (err, user) => {
+    const user = await Users.find({ email: mail }, (err, user) => {
       if (err) {
         return err;
       } else {
@@ -19,19 +32,25 @@ class UserDataBaseManager {
   }
 
   async getUserById(id) {
-    // const userObject = await
+    if ((await this.validId(id)) == false) {
+      const msg = "id invalido";
+      return msg;
+    }
 
-    Users.findById(id, (err, user) => {
-      console.log(user);
-
-      if (err) {
-        console.log(err);
-        return err;
-      } else {
-        return user.email;
-      }
-    });
-    // return userObject.email;
+    if ((await this.existId(id)) <= 0) {
+      const msg = "id nao existente no banco";
+      return msg;
+    } else {
+      const userObject = await Users.findById(id, (err, user) => {
+        if (err) {
+          console.log(err);
+          return err;
+        } else {
+          return user.email;
+        }
+      });
+      return userObject.email;
+    }
   }
 
   async addUser(body) {
@@ -55,7 +74,26 @@ class UserDataBaseManager {
     }
   }
 
-  removeUser(id) {}
+  async removeUser(id) {
+    if ((await this.validId(id)) == false) {
+      const msg = "id invalido";
+      return msg;
+    }
+    if ((await this.existId(id)) <= 0) {
+      const msg = "id nao existente no banco";
+      return msg;
+    } else {
+      await Users.findOneAndRemove({ _id: id }, err => {
+        if (err) {
+          console.log(err);
+          return err;
+        }
+      });
+      const msg = "Deletado";
+      console.log(msg);
+      return msg;
+    }
+  }
 
   editUser(id) {}
 }
