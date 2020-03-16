@@ -18,7 +18,7 @@ class ProfileDataBaseManager {
   }
   async existProfile(profile) {
     const cont = await Profile.countDocuments(
-      { profile: [profile] },
+      { profile: profile },
       (err, count) => {
         if (count > 0) console.log(count);
       }
@@ -50,38 +50,27 @@ class ProfileDataBaseManager {
     }
   }
   async getProfileByName(name) {
-    // if ((await this.existProfile(name)) <= 0) {
-    //   const msg = "Perfil nao existente no banco";
-    //   return msg;
-    // } else {
-
-    // db.bios.find( { contribs: { $in: [ "ALGOL", "Lisp" ]} } )
-
-    const serObject = await Profile.find(
-      { profile: { $in: [name] } },
-      (err, serv) => {
-        if (err) {
-          console.log(err);
-          return err;
-        } else {
-          return serv;
+    if ((await this.existProfile(name)) <= 0) {
+      const msg = "Perfil nao existente no banco";
+      return msg;
+    } else {
+      const serObject = await Profile.find(
+        { profile: { $in: [name] } },
+        (err, serv) => {
+          if (err) {
+            console.log(err);
+            return err;
+          } else {
+            return serv;
+          }
         }
-      }
-    );
-
-    return await serObject.filter((a) => {
-      return a = { name }
-    }).map((b) => {
-      return b.service;
-    });
-
-    // return teste;
-    // return serObject;
-    // return serObject.map((a)=>{
-    //     return a;
-    //   }
-    // );
-
+      );
+      return await serObject.filter((a) => {
+        return a = { name }
+      }).map((b) => {
+        return b.service;
+      });
+    }
   }
   async addProfile(body) {
     const _Service = new Service();
