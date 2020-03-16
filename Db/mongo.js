@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-// const url = 'mongodb://Seplag:Seplag2020@10.33.132.238:80/AUTH?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false';
-const url = 'mongodb://localhost:27017/AUTH?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false';
+const url = 'mongodb://Seplag:Seplag2020@10.33.132.238:80/AUTH?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false';
+// const url = 'mongodb://localhost:27017/AUTH?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false';
 
 const options = {
   useNewUrlParser: true,
@@ -17,7 +17,7 @@ const options = {
 
 module.exports = mongoose.connect(url, options)
   .then(() => {
-    console.log("Conected success!");
+    // console.log("Conected success!");
   })
   .catch(err => {
     console.log(err);
