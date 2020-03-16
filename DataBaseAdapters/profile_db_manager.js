@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Profile = require("../Db/serviceProfile_model");
+const Service = require("./service_db_manager");
 
 class ProfileDataBaseManager {
   async validId(id) {
@@ -7,7 +8,7 @@ class ProfileDataBaseManager {
     return isValid;
   }
   async existId(id) {
-    const cont = await Profile.countDocuments({ _id: id }, function(
+    const cont = await Profile.countDocuments({ _id: id }, function (
       err,
       count
     ) {
@@ -49,12 +50,47 @@ class ProfileDataBaseManager {
     }
   }
   async getProfileByName(name) {
-    if ((await this.existProfile(name)) <= 0) {
-      const msg = "Perfil nao existente no banco";
-      return msg;
-    } else {
-      const serObject = await Profile.findOne(
-        { profile: name },
+    // if ((await this.existProfile(name)) <= 0) {
+    //   const msg = "Perfil nao existente no banco";
+    //   return msg;
+    // } else {
+
+    // db.bios.find( { contribs: { $in: [ "ALGOL", "Lisp" ]} } )
+
+    const serObject = await Profile.find(
+      { profile: { $in: [name] } },
+      (err, serv) => {
+        if (err) {
+          console.log(err);
+          return err;
+        } else {
+          return serv;
+        }
+      }
+    );
+
+    return await serObject.filter((a) => {
+      return a = { name }
+    }).map((b) => {
+      return b.service;
+    });
+
+    // return teste;
+    // return serObject;
+    // return serObject.map((a)=>{
+    //     return a;
+    //   }
+    // );
+
+  }
+  async addProfile(body) {
+    const _Service = new Service();
+    if (await _Service.existService(body.service) > 0) {
+      var servCadastrado = await _Service.getServiceByName(body.service);
+
+      await Profile.updateOne(
+        { service: servCadastrado },
+        { $addToSet: { profile: body.profile } },
         (err, serv) => {
           if (err) {
             console.log(err);
@@ -62,22 +98,21 @@ class ProfileDataBaseManager {
           } else {
             return serv.profile;
           }
-        }
-      );
-      return serObject;
-    }
-  }
-  async addProfile(body) {
-    try {
-      const profile = new Profile({
-        service: body.service,
-        profile: body.profile
-      });
-      await profile.save();
-      const msg = `incluido com sucesso`;
+        });
+      const msg = `Profile incluído com sucesso`;
       return msg;
-    } catch (err) {
-      return console.log(err);
+    } else {
+      try {
+        const profile = new Profile({
+          service: body.service,
+          profile: body.profile
+        });
+        await profile.save();
+        const msg = `Profile incluído com sucesso`;
+        return msg;
+      } catch (err) {
+        return console.log(err);
+      }
     }
   }
   async removeProfile(id) {
@@ -100,7 +135,7 @@ class ProfileDataBaseManager {
       return msg;
     }
   }
-  
+
 }
 
 module.exports = ProfileDataBaseManager;

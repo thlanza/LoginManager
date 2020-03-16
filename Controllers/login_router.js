@@ -97,6 +97,16 @@ module.exports = app => {
     const msg = await _p.addProfile(req.body);
     return res.send(msg);
   });
+  app.get("/listProfile", async (req, res) => {
+    const _p = new ProfileDataBaseManager();
+    const msg = await _p.listProfile(req.body);
+    return res.send(msg);
+  });
+  app.post("/getProfileByName", async (req, res) => {
+    const _p = new ProfileDataBaseManager();
+    const msg = await _p.getProfileByName(req.body.profile);
+    return res.send(msg);
+  });
 
 
 
