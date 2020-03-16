@@ -1,6 +1,7 @@
 var service_db_manager = require('../DataBaseAdapters/service_db_manager');
 var token_db_manager = require('../DataBaseAdapters/token_db_manager');
 var user_db_manager = require('../DataBaseAdapters/user_db_manager');
+const jwt = require('jsonwebtoken');
 
 class AuthAPIManager{
 
@@ -15,12 +16,13 @@ class AuthAPIManager{
 
         //gerar Hash
         let hash = '';
+        hash = jwt.sign({service_id: service_id}, secret, {expiresIn: 86400});
 
-        //Salvar Hash+service_id na tabela de Tokens
-        //await this.token_db.addToken(service.name, hash);
+        await this.token_db.addToken(service_id, hash);
 
         return hash;
     }
+
 
     checkToken(secret, hash){
         // ========== ATENÇÃO A VALIDAÇÕES =======
@@ -40,7 +42,8 @@ class AuthAPIManager{
             return null;
         }
 
-        //gerar JWT
+        //checar JWT
+        return {msg: "Jwt válido"}
     }
 }
 

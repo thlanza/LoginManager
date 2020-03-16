@@ -8,6 +8,10 @@ class ServiceManager {
         this.service_db = new service_db_manager();
     }
 
+    getServiceIdBySecret() {
+        
+    }
+
     listService() {
         var list = this.service_db.listServices();
 

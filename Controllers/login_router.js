@@ -1,6 +1,7 @@
 const validator = require("../Validators/login_validator");
 const Login_manager = require("../Adapters/login_manager");
 const ProfileDataBaseManager = require("../DataBaseAdapters/profile_db_manager"); //teste chico nao mexer
+const errorManager = require('../Error/Error_manager');
 
 module.exports = app => {
   app.get("/", (req, resp) => {
@@ -35,7 +36,7 @@ module.exports = app => {
   });
 
   //tiago???? dois logins e pq nao ta usando o validador?
-  app.post("/login", async (req, res) => {
+  app.post("/login", validator.post, async (req, res) => {
     const loginManager = new Login_manager();
 
     const msg = await loginManager.validarLogin(req.body.email, req.body.senha);
@@ -56,7 +57,10 @@ module.exports = app => {
           </html>`
       );
     } else {
-      return res.send(msg);
+      return errorManager.ErrorManager(
+        403,
+        "Usuário não válido"
+      );
     }
   });
 
@@ -76,15 +80,22 @@ module.exports = app => {
 
   app.post("/gerarJwt", async (req, res) => {
     const loginManager = new Login_manager();
+    try {
     const msg = await loginManager.gerarJWT(req.body.email);
     return res.send(msg);
+    } catch(err){
+      return errorManager.ErrorManager(
+        403,
+        err.toString() + "Não foi possível gerar JWT"
+      )
+    }
   });
 
-  app.post("/login", validator.post, async (req, res) => {
-    const loginManager = new Login_manager();
-    const msg = await loginManager.validarLogin(req.body);
-    return res.send(msg);
-  });
+  // app.post("/login", validator.post, async (req, res) => {
+  //   const loginManager = new Login_manager();
+  //   const msg = await loginManager.validarLogin(req.body);
+  //   return res.send(msg);
+  // });
 
   ////////// teste chico nao mexer /////////////
   app.post("/removeProfile", async (req, res) => {
@@ -107,8 +118,4 @@ module.exports = app => {
     const msg = await _p.getProfileByName(req.body.profile);
     return res.send(msg);
   });
-
-
-
-
 };

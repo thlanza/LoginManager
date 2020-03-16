@@ -4,6 +4,8 @@ const Users = require("../Db/user_model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const errorManager = require("../Error/Error_manager");
+
 dotenv.config();
 
 class Login {
@@ -17,7 +19,7 @@ class Login {
       email: emailProcurado
     });
     if (!user) {
-      return { msg: "No user" };
+      return errorManager.ErrorManager(404, "Não há usuário");
     }
     const password = await Users.findOne(
       {
@@ -28,10 +30,11 @@ class Login {
 
     let awaitedPasswd = await password.password.toString();
 
-    console.log("senha mandada pelo usuário", passwdMandada);
-    console.log("awaited Passwd", awaitedPasswd);
     if (!bcrypt.compareSync(passwdMandada, awaitedPasswd)) {
-      return { msg: "Senha ou usuário estão incorretos" };
+      return errorManager.ErrorManager(
+        403,
+        "Senha ou usuário estão incorretos"
+      );
     }
 
     return { msg: "Usuário válido!" };
@@ -41,6 +44,12 @@ class Login {
     const user = await Users.findOne({
       email: email
     });
+    if(!user)
+      return errorManager.ErrorManager(
+        404,
+        "Usuário não existe!"
+      )
+      
     function gerarToken(params = {}) {
       return jwt.sign(params, process.env.SECRET, {
         expiresIn: 86400
