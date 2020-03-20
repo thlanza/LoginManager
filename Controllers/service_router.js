@@ -1,65 +1,69 @@
-var service_manager = require('../Adapters/service_manager');
-var validator = require('../Validators/service_validator');
+var service_manager = require("../Adapters/service_manager");
+var validator = require("../Validators/service_validator");
+const secrets = require("../DataBaseAdapters/secrets.json");
 
-module.exports = (app) => {
+module.exports = app => {
+  app.get("/Service", (req, res) => {
+    var service = new service_manager();
 
-    app.get('/Service', (req, res) => {
-        var service = new service_manager();
+    var list = service.listService();
 
-        var list = service.listService();
+    res.json(list);
+  });
 
-        res.json(list);
-    });
+  app.get("/serviceIdBySecret", (req, res) => {
+    let service = new service_manager();
+    const secretArray = secrets.services;
 
-    app.get('/Service/:id', validator.get, (req, res) => {
-        var service = new service_manager();
+    var found = service.getServiceIdBySecret("mabjakhwe", secretArray);
+    res.json(found);
+  });
 
-        try {
-            var obj = service.getService(req.params.id);
-        }
-        catch (e) {
-            res.status(404).send(e);
-        }
+  app.get("/Service/:id", validator.get, (req, res) => {
+    var service = new service_manager();
 
-        res.json(obj);
-    });
+    try {
+      var obj = service.getService(req.params.id);
+    } catch (e) {
+      res.status(404).send(e);
+    }
 
-    app.post('/Service', validator.post, (req, res) => {
-        var service = new service_manager();
+    res.json(obj);
+  });
 
-        try {
-            service.addService(req.body);
-        }
-        catch (e) {
-            return res.status(500).send(e);
-        }
+  app.post("/Service", validator.post, (req, res) => {
+    var service = new service_manager();
 
-        return res.status(201).send('Ok');
-    });
+    try {
+      service.addService(req.body);
+    } catch (e) {
+      return res.status(500).send(e);
+    }
 
-    app.delete('/Service', validator.delete, (req, res) => {
-        var service = new service_manager();
+    return res.status(201).send("Ok");
+  });
 
-        try {
-            service.removeService(req.body);
-        }
-        catch (e) {
-            res.status(500).send(e);
-        }
+  app.delete("/Service", validator.delete, (req, res) => {
+    var service = new service_manager();
 
-        res.send('Ok');
-    });
+    try {
+      service.removeService(req.body);
+    } catch (e) {
+      res.status(500).send(e);
+    }
 
-    app.put('/Service', validator.put, (req, res) => {
-        var service = new service_manager();
+    res.send("Ok");
+  });
 
-        try {
-            service.editService(req.body);
-        }
-        catch (e) {
-            res.status(500).send(e);
-        }
+  app.put("/Service", validator.put, (req, res) => {
+    var service = new service_manager();
 
-        res.send('Ok');
-    });
-}
+    try {
+      service.editService(req.body);
+    } catch (e) {
+      res.status(500).send(e);
+    }
+
+    res.send("Ok");
+  });
+};

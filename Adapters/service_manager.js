@@ -1,107 +1,105 @@
-var service_db_manager = require('../DataBaseAdapters/service_db_manager');
-var logger = require('../Logger/log_manager');
+var service_db_manager = require("../DataBaseAdapters/service_db_manager");
+var logger = require("../Logger/log_manager");
+const errorManager = require("../Error/Error_manager");
 
 class ServiceManager {
+  constructor() {
+    this.log = new logger("Service");
+    this.service_db = new service_db_manager();
+  }
 
-    constructor() {
-        this.log = new logger('Service');
-        this.service_db = new service_db_manager();
+  getServiceIdBySecret(searchSecret, dataSent) {
+    const secretArray = dataSent;
+    console.log(secretArray);
+    function filterArray(secretProcurado) {
+      return secretArray.filter(function(data) {
+        return data.secret === secretProcurado;
+      });
+    }
+    let found = filterArray(searchSecret);
+    if (found.length === 0)
+      return errorManager.ErrorManager(404, "Serviço não encontrado");
+    if (found) return found[0].id;
+  }
+
+  listService() {
+    var list = this.service_db.listServices();
+
+    return list;
+  }
+
+  getService(id) {
+    if (!id || id == "") {
+      return new Error("Invalid service Id value.");
+    }
+    try {
+      let service = this.service_db.getServiceById(id);
+      return service;
+    } catch (e) {
+      return new Error(e); //Ex.: Service not found
+    }
+  }
+
+  addService(name, domain) {
+    if (!name || name == "") {
+      return new Error("Invalid service name value.");
+    } else if (!domain || domain == "") {
+      return new Error("Invalid service domain value.");
+    } else if (this.service_db.searchServiceByName(name)) {
+      return new Error("Service name already exists.");
+    } else if (this.service_db.searchServiceByDomain(domain)) {
+      return new Error("Domain already in use.");
     }
 
-    getServiceIdBySecret() {
-        
+    try {
+      this.service_db.addService(name, domain);
+    } catch (e) {
+      this.log.fail("add", e);
+      return new Error(e);
     }
 
-    listService() {
-        var list = this.service_db.listServices();
+    this.log.success("add");
 
-        return list;
+    //return ?
+  }
+
+  removeService(id) {
+    if (!id || id == "") {
+      return new Error("Invalid service Id value.");
+    } else if (!this.service_db.searchServiceById(id)) {
+      return new Error("Service not found - Invalid service Id.");
     }
 
-    getService(id) {
-        if (!id || id == '') {
-            return new Error('Invalid service Id value.');
-        }
-        try {
-            let service = this.service_db.getServiceById(id);
-            return service;
-        }
-        catch (e) {
-            return new Error(e); //Ex.: Service not found
-        }
+    try {
+      this.service_db.removeService(id);
+    } catch (e) {
+      this.log.fail("remove", e);
+      return new Error(e);
     }
 
-    addService(name, domain) {
-        if (!name || name == '') {
-            return new Error('Invalid service name value.');
-        }
-        else if (!domain || domain == '') {
-            return new Error('Invalid service domain value.');
-        }
-        else if (this.service_db.searchServiceByName(name)) {
-            return new Error('Service name already exists.');
-        }
-        else if (this.service_db.searchServiceByDomain(domain)) {
-            return new Error('Domain already in use.');
-        }
+    this.log.success("remove");
+  }
 
-        try {
-            this.service_db.addService(name, domain);
-        }
-        catch (e) {
-            this.log.fail('add', e);
-            return new Error(e);
-        }
-
-        this.log.success('add');
-
-        //return ?
+  editService(id, name, domain) {
+    if (!id || id == "") {
+      return new Error("Invalid service Id value.");
+    } else if (!name || name == "") {
+      return new Error("Invalid service name value.");
+    } else if (!domain || domain == "") {
+      return new Error("Invalid service domain value.");
+    } else if (!this.service_db.searchServiceById(id)) {
+      return new Error("Service not found - Invalid service Id.");
     }
 
-    removeService(id) {
-        if (!id || id == '') {
-            return new Error('Invalid service Id value.');
-        }
-
-        else if (!this.service_db.searchServiceById(id)) {
-            return new Error('Service not found - Invalid service Id.');
-        }
-
-        try {
-            this.service_db.removeService(id);
-        }
-        catch (e) {
-            this.log.fail('remove', e);
-            return new Error(e);
-        }
-
-        this.log.success('remove');
+    try {
+      this.service_db.editService(id, name, domain);
+    } catch (e) {
+      this.log.fail("edit", e);
+      return new Error(e);
     }
 
-    editService(id, name, domain) {
-        if (!id || id == '') {
-            return new Error('Invalid service Id value.');
-        }
-        else if (!name || name == '') {
-            return new Error('Invalid service name value.');
-        }
-        else if (!domain || domain == '') {
-            return new Error('Invalid service domain value.');
-        }
-        else if (!this.service_db.searchServiceById(id)) {
-            return new Error('Service not found - Invalid service Id.');
-        }
-
-        try {
-            this.service_db.editService(id, name, domain);
-        }
-        catch (e) {
-            this.log.fail('edit', e);
-            return new Error(e);
-        }
-
-        this.log.success('edit');
-    }
+    this.log.success("edit");
+  }
 }
 
 module.exports = ServiceManager;

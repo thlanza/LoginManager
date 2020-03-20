@@ -12,7 +12,15 @@ const Services = mongoose.model(
       profile: [{
         type: String,
         required: true
-      }]
+      }],
+      hash: {
+        type: String,
+        required: true
+      },
+      secret: {
+        type: String,
+        required: true
+      }
     },
     { collection: "Service" }
   )

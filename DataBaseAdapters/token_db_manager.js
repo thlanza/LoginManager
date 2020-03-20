@@ -1,5 +1,5 @@
 const errorManager = require('../Error/Error_manager')
-const Tokens = require('../')
+const Services = require('../Db/serviceProfile_model')
 
 class TokenDataBaseManager{
 
@@ -7,15 +7,42 @@ class TokenDataBaseManager{
         //Conecta no tabela/collection Token
     }
 
-    async addToken(service, hash){
+    async addToken(serviceId, hash){
         try {
-            const newToken = new Tokens({
-                serviceName: service,
-                hash: hash
-            })
-            await newToken.save();
-            const msg = "Token incluído com sucesso";
-            return msg;
+            // service: {
+            //     type: String,
+            //     required: true
+            //   },
+            //   profile: [{
+            //     type: String,
+            //     required: true
+            //   }],
+            //   hash: {
+            //     type: String,
+            //     required: true
+            //   },
+            //   secret: {
+            //     type: String,
+            //     required: true
+            //   }
+
+                Services.findById(serviceId, function(err, service) {
+                  if (err) res.send(err);
+              
+                  service.service = service.service;
+                  service.hash = hash;
+                  service.profile = service.profile;
+                  service.secret = service.secret;
+                  // save the contact and check for errors
+                  service.save(function(err) {
+                    if (err) res.json(err);
+                    res.json({
+                      message: "Serviço atualizado",
+                      data: service
+                    });
+                  });
+                });
+        
         }catch(err){
             return errorManager.ErrorManager(500, "Não foi possível salvar o token")
         }
@@ -42,8 +69,13 @@ class TokenDataBaseManager{
     //     }
     //   }
 
-    searchTokenByHash(hash){
-        //return boolean
+    async searchTokenByHash(hash){
+        const hash = await Services.findOne({ hash: hash });
+        if(hash){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     getUserIdByTokenHash(hash){
